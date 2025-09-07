@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 
+// Updated for deployment
+
 function App() {
   return (
     <div className="app">
