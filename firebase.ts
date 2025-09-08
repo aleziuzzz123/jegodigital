@@ -39,7 +39,7 @@ try {
   db = null;
 }
 
-export { auth, db };
+export { app, auth, db };
 
 // Configure Firestore settings to handle connection issues
 import { enableNetwork, disableNetwork } from 'firebase/firestore';
