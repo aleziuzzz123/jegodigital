@@ -191,7 +191,7 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ user, onLogout }) => 
           FirebaseService.getReports()
         ]);
 
-        // Handle services data
+        // Handle services data - always show something
         if (servicesData.status === 'fulfilled' && servicesData.value.length > 0) {
           console.log('Loaded services from Firebase:', servicesData.value.length);
           setServices(servicesData.value.map(s => ({
@@ -205,14 +205,16 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ user, onLogout }) => 
           })));
         } else {
           console.log('Using fallback services data');
+          // Keep the existing fallback data - don't clear it
         }
 
-        // Handle bundles data
+        // Handle bundles data - always show something
         if (bundlesData.status === 'fulfilled' && bundlesData.value.length > 0) {
           console.log('Loaded bundles from Firebase:', bundlesData.value.length);
           setBundles(bundlesData.value);
         } else {
           console.log('Using fallback bundles data');
+          // Keep the existing fallback data - don't clear it
         }
 
         // Handle projects data

@@ -63,14 +63,13 @@ export interface TeamMember {
 
 export class FirebaseService {
   // Resilient data fetching with fallback mechanisms
-  static async safeListen<T>(
+  static async listenWithFallback<T>(
     q: any, 
     onData: (data: T[]) => void, 
     fallbackData: T[] = [],
     timeoutMs: number = 4000
   ): Promise<() => void> {
-    let stopped = false;
-    let timeoutId: NodeJS.Timeout | null = null;
+    let delivered = false;
 
     const fallbackRead = async () => {
       try {
@@ -88,22 +87,10 @@ export class FirebaseService {
       }
     };
 
-    // Set up timeout fallback
-    timeoutId = setTimeout(() => {
-      if (!stopped) {
-        console.log('Realtime listener timeout, falling back to one-shot read');
-        fallbackRead();
-      }
-    }, timeoutMs);
-
     try {
       const unsub = onSnapshot(q, {
         next: (snap: QuerySnapshot) => {
-          if (timeoutId) {
-            clearTimeout(timeoutId);
-            timeoutId = null;
-          }
-          stopped = true;
+          delivered = true;
           const data = snap.docs.map(doc => ({
             id: doc.id,
             ...(doc.data() as object)
@@ -112,30 +99,26 @@ export class FirebaseService {
           console.log('Realtime listener successful:', data.length, 'items');
         },
         error: async (err) => {
-          console.error('Realtime listener failed, falling back:', err);
-          if (timeoutId) {
-            clearTimeout(timeoutId);
-            timeoutId = null;
-          }
+          console.error('Realtime failed → fallback to one-shot', err);
           await fallbackRead();
         }
       });
 
-      return () => {
-        stopped = true;
-        if (timeoutId) {
-          clearTimeout(timeoutId);
+      // Timeout fallback
+      setTimeout(async () => {
+        if (!delivered) {
+          try { 
+            await fallbackRead(); 
+          } catch (e) { 
+            console.error('Timeout fallback failed:', e); 
+          }
         }
-        unsub();
-      };
+      }, timeoutMs);
+
+      return unsub;
     } catch (error) {
       console.error('Failed to set up realtime listener, using fallback:', error);
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
       await fallbackRead();
-      
-      // Return a no-op unsubscribe function
       return () => {};
     }
   }
