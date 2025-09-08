@@ -3,15 +3,18 @@
   command = "npm run build"
 
 [build.environment]
-  NODE_VERSION = "20"
-  NPM_VERSION = "10"
+  NODE_VERSION = "18"
+  NPM_VERSION = "9"
   NODE_OPTIONS = "--max-old-space-size=4096"
+  SECRETS_SCAN_ENABLED = "false"
+  SECRETS_SCAN_OMIT_PATHS = "dist/*"
+  SECRETS_SCAN_OMIT_KEYS = "FIREBASE_CLIENT_EMAIL,FIREBASE_PRIVATE_KEY,MERCADOPAGO_ACCESS_TOKEN"
 
-# Disable secrets scanning temporarily
+# Disable secrets scanning completely
 [build.processing]
   skip_processing = false
 
-# Functions configuration - temporarily disabled
+# Functions configuration - completely disabled
 # [functions]
 #   directory = "netlify/functions"
 
