@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FirebaseService, Client, Payment, Project, SupportTicket } from '../services/firebaseService';
+import { ensureAdminSignedIn, checkAdminUserClaims } from '../services/authServiceAdmin';
 import ProductModal from './ProductModal';
 import InviteMemberModal from './InviteMemberModal';
 import NewProjectModal from './NewProjectModal';
@@ -311,6 +312,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
     // Load Firebase data in background (non-blocking)
     const loadFirebaseData = async () => {
       try {
+        // Ensure admin is authenticated before loading data
+        await ensureAdminSignedIn();
+        console.log('Admin authenticated, loading Firebase data...');
+        
+        const claims = await checkAdminUserClaims();
+        console.log('Admin user claims:', claims);
+        
         const [productsData, teamData, projectsData, clientsData, paymentsData, ticketsData] = await Promise.all([
           FirebaseService.getProducts(),
           FirebaseService.getTeamMembers(),

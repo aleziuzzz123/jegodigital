@@ -3,6 +3,7 @@ import './DashboardApp.css';
 import ClientDashboardClean from './components/ClientDashboardClean';
 import ClientDashboardMinimal from './components/ClientDashboardMinimal';
 import ClientDashboardNoFirebase from './components/ClientDashboardNoFirebase';
+import ClientDashboardHybrid from './components/ClientDashboardHybrid';
 import AdminDashboard from './components/AdminDashboard';
 
 interface User {
@@ -39,20 +40,22 @@ function DashboardApp() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for user in sessionStorage first (from homepage login)
-    const sessionUser = sessionStorage.getItem('jegodigital_current_user');
-    if (sessionUser) {
-      setUser(JSON.parse(sessionUser));
-      setIsLoading(false);
-      return;
-    }
-
-    // Check URL parameters for demo users
+    // Check URL parameters for demo users FIRST (override sessionStorage)
     const urlParams = new URLSearchParams(window.location.search);
     const userParam = urlParams.get('user');
     
     if (userParam && demoUsers[userParam as keyof typeof demoUsers]) {
+      console.log('Using URL parameter user:', userParam, demoUsers[userParam as keyof typeof demoUsers]);
       setUser(demoUsers[userParam as keyof typeof demoUsers]);
+      setIsLoading(false);
+      return;
+    }
+
+    // Check for user in sessionStorage (from homepage login)
+    const sessionUser = sessionStorage.getItem('jegodigital_current_user');
+    if (sessionUser) {
+      console.log('Using sessionStorage user:', JSON.parse(sessionUser));
+      setUser(JSON.parse(sessionUser));
       setIsLoading(false);
       return;
     }
@@ -97,12 +100,12 @@ function DashboardApp() {
 
   console.log('DashboardApp rendering with user:', user);
   console.log('User role:', user.role);
-  console.log('Will render:', user.role === 'client' ? 'ClientDashboardNoFirebase' : 'AdminDashboard');
+  console.log('Will render:', user.role === 'client' ? 'ClientDashboardHybrid' : 'AdminDashboard');
 
   return (
     <div className="dashboard-app">
       {user.role === 'client' ? (
-        <ClientDashboardNoFirebase />
+        <ClientDashboardHybrid />
       ) : (
         <AdminDashboard user={user} onLogout={handleLogout} />
       )}
