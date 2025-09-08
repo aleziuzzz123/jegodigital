@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './DashboardApp.css';
-import ClientDashboard from './components/ClientDashboard';
+import ClientDashboardClean from './components/ClientDashboardClean';
 import AdminDashboard from './components/AdminDashboard';
 
 interface User {
@@ -96,7 +96,7 @@ function DashboardApp() {
   return (
     <div className="dashboard-app">
       {user.role === 'client' ? (
-        <ClientDashboard user={user} onLogout={handleLogout} />
+        <ClientDashboardClean />
       ) : (
         <AdminDashboard user={user} onLogout={handleLogout} />
       )}

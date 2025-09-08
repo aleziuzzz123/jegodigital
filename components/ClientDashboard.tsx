@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PaymentComponent from '../PaymentComponent';
-import { FirebaseService } from '../services/firebaseService';
 import { FirebaseServiceOffline } from '../services/firebaseServiceOffline';
 import { ensureSignedIn, checkUserClaims } from '../services/authService';
 import { auth, db } from '../firebase';
