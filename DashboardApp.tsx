@@ -6,6 +6,7 @@ import ClientDashboardNoFirebase from './components/ClientDashboardNoFirebase';
 import ClientDashboardHybrid from './components/ClientDashboardHybrid';
 import ClientDashboardPure from './components/ClientDashboardPure';
 import ClientDashboardReal from './components/ClientDashboardReal';
+import ClientDashboardIsolated from './components/ClientDashboardIsolated';
 import AdminDashboard from './components/AdminDashboard';
 
 interface User {
@@ -102,12 +103,12 @@ function DashboardApp() {
 
   console.log('DashboardApp rendering with user:', user);
   console.log('User role:', user.role);
-  console.log('Will render:', user.role === 'client' ? 'ClientDashboardReal' : 'AdminDashboard');
+  console.log('Will render:', user.role === 'client' ? 'ClientDashboardIsolated' : 'AdminDashboard');
 
   return (
     <div className="dashboard-app">
       {user.role === 'client' ? (
-        <ClientDashboardReal />
+        <ClientDashboardIsolated />
       ) : (
         <AdminDashboard user={user} onLogout={handleLogout} />
       )}
