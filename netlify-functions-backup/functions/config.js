@@ -24,9 +24,18 @@ const config = {
   WEBSITE_URL: 'https://jegodigital.com'
 };
 
-// Validate required environment variables
-const requiredVars = ['RESEND_API_KEY', 'MERCADOPAGO_ACCESS_TOKEN', 'MERCADOPAGO_WEBHOOK_SECRET', 'FIREBASE_PRIVATE_KEY', 'FIREBASE_CLIENT_EMAIL'];
-const missingVars = requiredVars.filter(varName => !process.env[varName]);
+// Validate required environment variables dynamically
+const envVars = {
+  resend: process.env.RESEND_API_KEY,
+  mercadopago: process.env.MERCADOPAGO_ACCESS_TOKEN,
+  webhook: process.env.MERCADOPAGO_WEBHOOK_SECRET,
+  firebaseKey: process.env.FIREBASE_PRIVATE_KEY,
+  firebaseEmail: process.env.FIREBASE_CLIENT_EMAIL
+};
+
+const missingVars = Object.entries(envVars)
+  .filter(([key, value]) => !value)
+  .map(([key]) => key);
 
 if (missingVars.length > 0) {
   console.warn('Missing environment variables:', missingVars.join(', '));

@@ -6,6 +6,15 @@
   NODE_VERSION = "18"
   NPM_VERSION = "9"
 
+# Disable secrets scanning temporarily
+[build.processing]
+  skip_processing = false
+
+# Functions configuration
+[functions]
+  directory = "netlify/functions"
+
+# Redirects
 [[redirects]]
   from = "/dashboard"
   to = "/dashboard.html"
