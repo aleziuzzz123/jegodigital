@@ -16,5 +16,10 @@ service cloud.firestore {
 # 1. Go to Firebase Console > Firestore > Rules
 # 2. Replace your current rules with the above
 # 3. Click "Publish"
-# 4. Test your client dashboard
-# 5. If it works, implement the proper rules below
+# 4. Test your client dashboard at: https://jegodigital.com/dashboard.html?user=client
+# 5. Test Firebase connection at: https://jegodigital.com/test-firebase-connection.html
+# 6. If it works, implement the proper rules below
+
+# DIRECT LINKS:
+# Firebase Console: https://console.firebase.google.com/u/6/project/jegodigital-2ed98/firestore/rules
+# Test Page: https://jegodigital.com/test-firebase-connection.html

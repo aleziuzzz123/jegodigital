@@ -25,8 +25,8 @@ try {
   // Initialize Firestore with streaming transport fixes
   db = initializeFirestore(app, {
     experimentalAutoDetectLongPolling: true,
-    // if you still see Listen 400s, switch to:
-    // experimentalForceLongPolling: true,
+    // Force long polling to fix 400 errors on /Listen endpoints
+    experimentalForceLongPolling: true,
     useFetchStreams: false
   });
   
