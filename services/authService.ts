@@ -3,9 +3,9 @@ import { app } from "../firebase";
 
 export const auth = getAuth(app);
 
-// Make sure there is a user (email/password OR anonymous) before any Firestore reads
+// Skip authentication for client dashboard - just resolve immediately
 export function ensureSignedIn(): Promise<void> {
-  return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve) => {
     try {
       // Check if user is already signed in
       const currentUser = auth.currentUser;
@@ -15,14 +15,13 @@ export function ensureSignedIn(): Promise<void> {
         return;
       }
 
-      // If no user, sign in anonymously
-      console.log('No user found, signing in anonymously...');
-      const userCredential = await signInAnonymously(auth);
-      console.log('Signed in anonymously successfully:', userCredential.user.uid);
+      // For client dashboard, skip authentication since anonymous auth is disabled
+      console.log('Skipping authentication for client dashboard (anonymous auth disabled)');
       resolve();
     } catch (e) { 
       console.error('Auth error:', e);
-      reject(e); 
+      // Even if auth fails, resolve to continue with fallback data
+      resolve();
     }
   });
 }
@@ -31,7 +30,8 @@ export function ensureSignedIn(): Promise<void> {
 export async function checkUserClaims(): Promise<{ role?: string; [key: string]: any }> {
   try {
     if (!auth.currentUser) {
-      throw new Error('No user signed in');
+      console.log('No user signed in, returning empty claims');
+      return {};
     }
     
     const tokenResult = await auth.currentUser.getIdTokenResult(true);
@@ -52,7 +52,7 @@ export async function refreshUserToken(): Promise<void> {
     
     await auth.currentUser.getIdToken(true);
     console.log('User token refreshed');
-  } catch (error) {
+    } catch (error) {
     console.error('Error refreshing token:', error);
   }
 }

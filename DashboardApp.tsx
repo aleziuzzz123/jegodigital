@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './DashboardApp.css';
 import ClientDashboardClean from './components/ClientDashboardClean';
+import ClientDashboardMinimal from './components/ClientDashboardMinimal';
 import AdminDashboard from './components/AdminDashboard';
 
 interface User {
@@ -93,10 +94,14 @@ function DashboardApp() {
     );
   }
 
+  console.log('DashboardApp rendering with user:', user);
+  console.log('User role:', user.role);
+  console.log('Will render:', user.role === 'client' ? 'ClientDashboardClean' : 'AdminDashboard');
+
   return (
     <div className="dashboard-app">
       {user.role === 'client' ? (
-        <ClientDashboardClean />
+        <ClientDashboardMinimal />
       ) : (
         <AdminDashboard user={user} onLogout={handleLogout} />
       )}
