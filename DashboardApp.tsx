@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './DashboardApp.css';
 import ClientDashboardClean from './components/ClientDashboardClean';
 import ClientDashboardMinimal from './components/ClientDashboardMinimal';
+import ClientDashboardNoFirebase from './components/ClientDashboardNoFirebase';
 import AdminDashboard from './components/AdminDashboard';
 
 interface User {
@@ -96,12 +97,12 @@ function DashboardApp() {
 
   console.log('DashboardApp rendering with user:', user);
   console.log('User role:', user.role);
-  console.log('Will render:', user.role === 'client' ? 'ClientDashboardClean' : 'AdminDashboard');
+  console.log('Will render:', user.role === 'client' ? 'ClientDashboardNoFirebase' : 'AdminDashboard');
 
   return (
     <div className="dashboard-app">
       {user.role === 'client' ? (
-        <ClientDashboardMinimal />
+        <ClientDashboardNoFirebase />
       ) : (
         <AdminDashboard user={user} onLogout={handleLogout} />
       )}
