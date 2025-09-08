@@ -5,14 +5,15 @@
 [build.environment]
   NODE_VERSION = "18"
   NPM_VERSION = "9"
+  NODE_OPTIONS = "--max-old-space-size=4096"
 
 # Disable secrets scanning temporarily
 [build.processing]
   skip_processing = false
 
-# Functions configuration
-[functions]
-  directory = "netlify/functions"
+# Functions configuration - temporarily disabled
+# [functions]
+#   directory = "netlify/functions"
 
 # Redirects
 [[redirects]]
