@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PaymentComponent from '../PaymentComponent';
 import { FirebaseService } from '../services/firebaseService';
+import { FirebaseServiceOffline } from '../services/firebaseServiceOffline';
 import { auth, db } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
@@ -178,17 +179,21 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ user, onLogout }) => 
       }
     ]);
 
-    // Load Firebase data with resilient error handling
+    // Load Firebase data with offline-first approach
     const loadFirebaseData = async () => {
       try {
-        console.log('Attempting to load Firebase data...');
+        console.log('Attempting to load Firebase data with offline-first approach...');
         
-        // Load data from Firebase with resilient error handling
+        // First, try health check
+        const healthCheck = await FirebaseServiceOffline.healthCheck();
+        console.log('Firebase health check:', healthCheck);
+        
+        // Load data from Firebase with offline-first approach
         const [servicesData, bundlesData, projectsData, reportsData] = await Promise.allSettled([
-          FirebaseService.getProducts(),
-          FirebaseService.getBundles(),
-          FirebaseService.getProjects(),
-          FirebaseService.getReports()
+          FirebaseServiceOffline.getProducts(),
+          FirebaseServiceOffline.getBundles(),
+          FirebaseServiceOffline.getProjects(),
+          FirebaseServiceOffline.getReports()
         ]);
 
         // Handle services data - always show something
