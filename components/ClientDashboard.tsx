@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PaymentComponent from '../PaymentComponent';
 import { FirebaseService } from '../services/firebaseService';
 import { FirebaseServiceOffline } from '../services/firebaseServiceOffline';
+import { ensureSignedIn, checkUserClaims } from '../services/authService';
 import { auth, db } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
@@ -179,10 +180,18 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ user, onLogout }) => 
       }
     ]);
 
-    // Load Firebase data with offline-first approach
+    // Load Firebase data with authentication gating
     const loadFirebaseData = async () => {
       try {
-        console.log('Attempting to load Firebase data with offline-first approach...');
+        console.log('Ensuring user is signed in before loading Firebase data...');
+        
+        // Wait for authentication before any Firestore reads
+        await ensureSignedIn();
+        console.log('User authenticated, proceeding with Firebase data load');
+        
+        // Check user claims
+        const claims = await checkUserClaims();
+        console.log('User claims:', claims);
         
         // First, try health check
         const healthCheck = await FirebaseServiceOffline.healthCheck();
