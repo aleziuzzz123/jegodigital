@@ -63,6 +63,12 @@ const ClientDashboardClean: React.FC = () => {
 
   useEffect(() => {
     const loadData = async () => {
+      // Set a timeout to prevent hanging
+      const timeoutId = setTimeout(() => {
+        console.log('Data loading timeout, using fallback data');
+        setLoading(false);
+      }, 10000); // 10 second timeout
+
       try {
         console.log('Starting clean client dashboard data load...');
         
@@ -152,6 +158,9 @@ const ClientDashboardClean: React.FC = () => {
         setReports([]);
 
         console.log('Fallback data set, attempting Firebase connection...');
+        
+        // Set loading to false immediately so UI shows
+        setLoading(false);
 
         // Wait for authentication
         await ensureSignedIn();
@@ -212,11 +221,13 @@ const ClientDashboardClean: React.FC = () => {
         }
 
         setLoading(false);
+        clearTimeout(timeoutId);
         console.log('Client dashboard data loading completed');
 
       } catch (error) {
         console.error('Error in client dashboard:', error);
         setLoading(false);
+        clearTimeout(timeoutId);
       }
     };
 

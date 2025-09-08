@@ -5,23 +5,25 @@ export const auth = getAuth(app);
 
 // Make sure there is a user (email/password OR anonymous) before any Firestore reads
 export function ensureSignedIn(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      unsubscribe(); // Unsubscribe immediately to prevent multiple calls
-      try {
-        if (!user) {
-          console.log('No user found, signing in anonymously...');
-          await signInAnonymously(auth);
-          console.log('Signed in anonymously successfully');
-        } else {
-          console.log('User already signed in:', user.uid);
-        }
-        resolve(); // Always resolve after handling the user state
-      } catch (e) { 
-        console.error('Auth error:', e);
-        reject(e); 
+  return new Promise(async (resolve, reject) => {
+    try {
+      // Check if user is already signed in
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        console.log('User already signed in:', currentUser.uid);
+        resolve();
+        return;
       }
-    });
+
+      // If no user, sign in anonymously
+      console.log('No user found, signing in anonymously...');
+      const userCredential = await signInAnonymously(auth);
+      console.log('Signed in anonymously successfully:', userCredential.user.uid);
+      resolve();
+    } catch (e) { 
+      console.error('Auth error:', e);
+      reject(e); 
+    }
   });
 }
 
