@@ -416,7 +416,7 @@ const OfflineClientDashboard: React.FC<ClientDashboardProps> = ({ user, onLogout
               </button>
             </div>
             <div className="modal-content">
-              <PaymentComponent />
+              <PaymentComponent amount={0} description="Test payment" />
             </div>
           </div>
         </div>

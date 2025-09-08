@@ -25,7 +25,6 @@ try {
   // Initialize Firestore with streaming transport fixes
   db = initializeFirestore(app, {
     experimentalAutoDetectLongPolling: true,
-    useFetchStreams: false, // Helps with CDN compatibility
   });
   
   console.log('Firebase initialized successfully');
@@ -40,7 +39,7 @@ try {
 export { auth, db };
 
 // Configure Firestore settings to handle connection issues
-import { enableNetwork, disableNetwork, connectFirestoreEmulator } from 'firebase/firestore';
+import { enableNetwork, disableNetwork } from 'firebase/firestore';
 
 // Configure Firestore for better error handling
 if (typeof window !== 'undefined' && db) {

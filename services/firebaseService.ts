@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, getDoc, query, where, orderBy, limit, addDoc, updateDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, query, where, orderBy, limit, addDoc, updateDoc, deleteDoc, onSnapshot, QuerySnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 
 export interface Client {
@@ -15,7 +15,9 @@ export interface Payment {
   clientId: string;
   amount: number;
   status: string;
-  service: string;
+  service?: string;
+  type?: string;
+  description?: string;
   createdAt: any;
 }
 
@@ -44,6 +46,8 @@ export interface Product {
   price: number;
   status: string;
   description?: string;
+  icon?: string;
+  monthly?: boolean;
   createdAt?: string;
 }
 
@@ -74,7 +78,7 @@ export class FirebaseService {
         const snap = await getDocs(q);
         const data = snap.docs.map(doc => ({
           id: doc.id,
-          ...doc.data()
+          ...(doc.data() as object)
         })) as T[];
         onData(data);
         console.log('Fallback read successful:', data.length, 'items');
@@ -94,7 +98,7 @@ export class FirebaseService {
 
     try {
       const unsub = onSnapshot(q, {
-        next: (snap) => {
+        next: (snap: QuerySnapshot) => {
           if (timeoutId) {
             clearTimeout(timeoutId);
             timeoutId = null;
@@ -102,7 +106,7 @@ export class FirebaseService {
           stopped = true;
           const data = snap.docs.map(doc => ({
             id: doc.id,
-            ...doc.data()
+            ...(doc.data() as object)
           })) as T[];
           onData(data);
           console.log('Realtime listener successful:', data.length, 'items');
@@ -160,7 +164,7 @@ export class FirebaseService {
       
       const data = snapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data()
+        ...(doc.data() as object)
       })) as T[];
       
       console.log(`${collectionName} loaded:`, data.length, 'items');

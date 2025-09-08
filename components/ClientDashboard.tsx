@@ -194,7 +194,15 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ user, onLogout }) => 
         // Handle services data
         if (servicesData.status === 'fulfilled' && servicesData.value.length > 0) {
           console.log('Loaded services from Firebase:', servicesData.value.length);
-          setServices(servicesData.value);
+          setServices(servicesData.value.map(s => ({
+            id: s.id,
+            name: s.name,
+            description: s.description || '',
+            price: s.price,
+            icon: s.icon || '🔧',
+            monthly: s.monthly || false,
+            category: s.category
+          })));
         } else {
           console.log('Using fallback services data');
         }

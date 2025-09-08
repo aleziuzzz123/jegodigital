@@ -998,7 +998,7 @@ function App() {
                 </div>
                 <div className="form-group">
                   <label htmlFor="message">Project Details *</label>
-                  <textarea id="message" name="message" rows="4" placeholder="Tell us about your project, goals, and timeline..." required></textarea>
+                  <textarea id="message" name="message" rows={4} placeholder="Tell us about your project, goals, and timeline..." required></textarea>
                 </div>
                 <button type="submit" className="btn-primary">Send Message</button>
                 <p className="form-note">We'll respond within 24 hours with a detailed proposal.</p>

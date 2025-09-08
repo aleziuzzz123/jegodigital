@@ -322,7 +322,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
 
         // Update state with Firebase data only if we have data
         if (productsData.length > 0) {
-          setProducts(productsData);
+          setProducts(productsData.map(p => ({
+            id: p.id,
+            name: p.name,
+            category: p.category,
+            price: p.price,
+            status: p.status,
+            description: p.description || ''
+          })));
         }
         if (teamData.length > 0) {
           setTeamMembers(teamData);
