@@ -70,7 +70,7 @@ export class FirebaseService {
     timeoutMs: number = 4000
   ): Promise<() => void> {
     let delivered = false;
-
+    
     const fallbackRead = async () => {
       try {
         console.log('Attempting fallback one-shot read...');

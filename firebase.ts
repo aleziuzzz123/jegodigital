@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { initializeFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 
@@ -19,14 +19,16 @@ let auth;
 let db;
 
 try {
-  app = initializeApp(firebaseConfig);
+  // Use existing app if available, otherwise create new one
+  app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
   auth = getAuth(app);
   
   // Initialize Firestore with streaming transport fixes
   db = initializeFirestore(app, {
-    // Force long polling to fix 400 errors on /Listen endpoints
-    experimentalForceLongPolling: true,
-    useFetchStreams: false
+    experimentalAutoDetectLongPolling: true, // first try this
+    // if you still see 400s, switch to:
+    // experimentalForceLongPolling: true,
+    useFetchStreams: false, // helps some proxies/CDNs
   });
   
   console.log('Firebase initialized successfully');
