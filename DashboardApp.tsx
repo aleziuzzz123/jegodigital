@@ -7,7 +7,7 @@ import ClientDashboardHybrid from './components/ClientDashboardHybrid';
 import ClientDashboardPure from './components/ClientDashboardPure';
 import ClientDashboardReal from './components/ClientDashboardReal';
 import ClientDashboardIsolated from './components/ClientDashboardIsolated';
-import AdminDashboard from './components/AdminDashboard';
+import AdminDashboardIsolated from './components/AdminDashboardIsolated';
 
 interface User {
   id: string;
@@ -103,14 +103,14 @@ function DashboardApp() {
 
   console.log('DashboardApp rendering with user:', user);
   console.log('User role:', user.role);
-  console.log('Will render:', user.role === 'client' ? 'ClientDashboardIsolated' : 'AdminDashboard');
+  console.log('Will render:', user.role === 'client' ? 'ClientDashboardIsolated' : 'AdminDashboardIsolated');
 
   return (
     <div className="dashboard-app">
       {user.role === 'client' ? (
         <ClientDashboardIsolated />
       ) : (
-        <AdminDashboard user={user} onLogout={handleLogout} />
+        <AdminDashboardIsolated user={user} onLogout={handleLogout} />
       )}
     </div>
   );
