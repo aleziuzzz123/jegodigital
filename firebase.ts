@@ -25,8 +25,8 @@ try {
   
   // Initialize Firestore with safe transport
   db = initializeFirestore(app, {
-    experimentalAutoDetectLongPolling: true,
-    // experimentalForceLongPolling: true,  // use this instead if you still see 400
+    experimentalForceLongPolling: true,   // ON - as recommended by GPT
+    // experimentalAutoDetectLongPolling: true, // OFF when forceLongPolling is ON
     useFetchStreams: false,
   });
   
